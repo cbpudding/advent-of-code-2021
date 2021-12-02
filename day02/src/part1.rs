@@ -1,0 +1,29 @@
+use std::{
+    env,
+    fs::File,
+    io::{BufRead, BufReader},
+};
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    if args.len() > 1 {
+        let input = File::open(&args[1]).unwrap();
+        let reader = BufReader::new(input);
+        let (mut x, mut y) = (0, 0); // Horizontal position and depth
+        for c in reader.lines() {
+            let cmd = c.unwrap();
+            let comp: Vec<&str> = cmd.split(" ").collect();
+            let direction = comp[0];
+            let amount = comp[1].parse::<usize>().unwrap();
+            match direction {
+                "forward" => x += amount,
+                "down" => y += amount,
+                "up" => y -= amount,
+                _ => ()
+            }
+        }
+        println!("Final coordinates are ({}, {}) resulting in a product of {}!", x, y, x * y);
+    } else {
+        eprintln!("Which file am I trying to open?");
+    }
+}
